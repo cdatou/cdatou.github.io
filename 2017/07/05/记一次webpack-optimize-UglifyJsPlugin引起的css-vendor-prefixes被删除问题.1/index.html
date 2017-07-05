@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="记忆和提醒">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="cdatou">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="记一次 webpack.optimize.UglifyJsPlugin 引起的 css vendor prefixes 被删除"/>
+    
+
+    <!--Open Graph Description-->
+    
+        <meta property="og:description" content="记忆和提醒" />
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="积善成德"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>记一次 webpack.optimize.UglifyJsPlugin 引起的 css vendor prefixes 被删除 - 积善成德</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+    <link rel="icon" href="/img/logo.jpg">
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">记忆和提醒</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            
+                                Tags
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/cdatou">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('/img/black-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>记一次 webpack.optimize.UglifyJsPlugin 引起的 css vendor prefixes 被删除</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        
+                            2017-07-05
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/pack/">#pack</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="事情起因"><a href="#事情起因" class="headerlink" title="事情起因"></a>事情起因</h2><p>最近接手了一个 PC 端的项目，需要在原来的基础上添加上一些功能。项目的构建是用 webpack@1.x 进行构建。</p>
+<p>原先构建的人为了兼容到 IE9， 构建的时候添加了 <code>postcss + autoprefixer</code> ，为 IE 添加 <code>-ms-</code> 前缀。</p>
+<p>在开发调试的时候，测试兼容到 IE9。但是当部署生产环境代码给测试同学测试的时候，测试时 IE9 上有部分样式错乱问题，查看发现 <code>-ms-</code> 的 prefixer 消失。</p>
+<h3 id="不说废话上代码"><a href="#不说废话上代码" class="headerlink" title="不说废话上代码"></a>不说废话上代码</h3><p>下面是针对项目进行的模拟：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">├── package.json</div><div class="line">├── src</div><div class="line">│   ├── index.css</div><div class="line">│   └── index.js</div><div class="line">└── webpack.config.js</div></pre></td></tr></table></figure>
+<p>依赖如下：（请注意版本）</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"devDependencies"</span>: &#123;</div><div class="line">    <span class="attr">"autoprefixer"</span>: <span class="string">"^7.1.1"</span>,</div><div class="line">    <span class="attr">"css-loader"</span>: <span class="string">"^0.25.0"</span>,</div><div class="line">    <span class="attr">"postcss-loader"</span>: <span class="string">"^1.3.3"</span>,</div><div class="line">    <span class="attr">"style-loader"</span>: <span class="string">"^0.13.1"</span>,</div><div class="line">    <span class="attr">"webpack"</span>: <span class="string">"^1.13.3"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>src/index.css<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.test-prefixer</span> &#123;</div><div class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-50%, -50%);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>src/index.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'./index.css'</span>);</div></pre></td></tr></table></figure></p>
+<p>webapck.config.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</div><div class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">'webpack'</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    <span class="attr">entry</span>: <span class="string">'./src/index'</span>,</div><div class="line">    <span class="attr">output</span>: &#123;</div><div class="line">        <span class="attr">path</span>: path.resolve(__dirname, <span class="string">'dist'</span>),</div><div class="line">        <span class="attr">filename</span>: <span class="string">'[name].js'</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">module</span>: &#123;</div><div class="line">        <span class="attr">loaders</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</div><div class="line">                <span class="attr">loader</span>: <span class="string">'style-loader!css-loader!postcss-loader'</span></div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">postcss</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        <span class="keyword">return</span> [</div><div class="line">            <span class="built_in">require</span>(<span class="string">'autoprefixer'</span>)(&#123;</div><div class="line">                <span class="attr">browsers</span>: [<span class="string">'IE&gt;=9'</span>]</div><div class="line">            &#125;)</div><div class="line">        ];</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">plugins</span>: <span class="function">(<span class="params">(</span>) =&gt;</span> &#123;</div><div class="line">        <span class="keyword">let</span> plugins = [];</div><div class="line">        <span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">'production'</span>) &#123;</div><div class="line">            plugins.push(<span class="keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123;</div><div class="line">                <span class="attr">compress</span>: &#123;<span class="attr">warnings</span>: <span class="literal">false</span>&#125;</div><div class="line">            &#125;));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> plugins;</div><div class="line">    &#125;)()</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>让我们查看一下非生产环境下的构建结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="comment">/***/</span> (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, __webpack_require__</span>) </span>&#123;</div><div class="line"></div><div class="line">	exports = <span class="built_in">module</span>.exports = __webpack_require__(<span class="number">3</span>)();</div><div class="line">	<span class="comment">// imports</span></div><div class="line"></div><div class="line"></div><div class="line">	<span class="comment">// module</span></div><div class="line">	exports.push([<span class="built_in">module</span>.id, <span class="string">".test-prefixer &#123;\n    -ms-transform: translate(-50%, -50%);\n        transform: translate(-50%, -50%);\n&#125;\n"</span>, <span class="string">""</span>]);</div><div class="line"></div><div class="line">	<span class="comment">// exports</span></div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<p>再看一下生产环境下构建的结果：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ....</span></div><div class="line">t=e.exports=n(<span class="number">3</span>)(),t.push([e.id,<span class="string">".test-prefixer&#123;transform:translate(-50%,-50%)&#125;"</span>,<span class="string">""</span>])&#125;</div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<p><strong><code>-ms-</code> 的 prefixer 消失了。。。</strong></p>
+<h2 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h2><p>从 webpack.config.js 上看，两者唯一的区别是有没有添加 <code>webpack.optimize.UglifyJsPlugin</code> 进行 js 代码压缩。</p>
+<p><strong>UglifyJs 压缩 JS 代码还能把 css 的 prefixer 给干了？？？？？？</strong></p>
+<p>查了下 webpack 关于 <code>webpack.optimize.UglifyJsPlugin</code> 的 ISSUE, 找到最相似匹配的</p>
+<p><a href="https://github.com/webpack/webpack/issues/2543" target="_blank" rel="external">Using plugin “webpack.optimize.UglifyJsPlugin” led to remove the style “display: -webkit-flex;” </a></p>
+<p>但是问题依然没有解决，<code>UglifyJs</code> 怎么可能去删除 js 的字符串中特定的字符！</p>
+<h3 id="从文档和源码开始"><a href="#从文档和源码开始" class="headerlink" title="从文档和源码开始"></a>从文档和源码开始</h3><p>只能再看文档是不是忽略了什么 <a href="http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin" target="_blank" rel="external">webpack.optimize.UglifyJsPlugin</a></p>
+<blockquote>
+<p>Minimize all JavaScript output of chunks. <code>Loaders are switched into minimizing mode.</code> You can pass an object containing UglifyJS options.</p>
+</blockquote>
+<p>请重点注意这句话： <code>Loaders are switched into minimizing mode.</code> <strong>所有 loader 都会进入压缩模式</strong>。</p>
+<p>再来看看<a href="https://github.com/webpack/webpack/blob/v1.13.3/lib/optimize/UglifyJsPlugin.js#L143" target="_blank" rel="external">源码</a>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ...</span></div><div class="line">compilation.plugin(<span class="string">"normal-module-loader"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">context</span>) </span>&#123;</div><div class="line">    context.minimize = <span class="literal">true</span>;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>为所有的 loader 添加了 <code>minimize</code> 配置。</p>
+<h3 id="回头看-webpack-配置"><a href="#回头看-webpack-配置" class="headerlink" title="回头看 webpack 配置"></a>回头看 webpack 配置</h3><p>从上面 webpack 的配置上看，关于样式，只用了三个加载器， <code>style-loader</code>, <code>css-loader</code>, <code>postcss-loader</code></p>
+<p>对于  <code>style-loader</code> 和 <code>postcss-loader</code>， 都没有 <code>minimize</code> 的可选的配置项，那么问题只能出在 <code>css-loader</code> 上了。</p>
+<p>那么我们再进行一次测试：</p>
+<p>修改 css 的 loader 规则如下，强制在非生产环境压缩 css ，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</div><div class="line">    <span class="attr">loader</span>: <span class="string">'style-loader!css-loader?minimize=true!postcss-loader'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>查看结果如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="comment">/***/</span> (<span class="function"><span class="keyword">function</span>(<span class="params">module, exports, __webpack_require__</span>) </span>&#123;</div><div class="line"></div><div class="line">	exports = <span class="built_in">module</span>.exports = __webpack_require__(<span class="number">3</span>)();</div><div class="line">	<span class="comment">// imports</span></div><div class="line"></div><div class="line"></div><div class="line">	<span class="comment">// module</span></div><div class="line">	exports.push([<span class="built_in">module</span>.id, <span class="string">".test-prefixer&#123;transform:translate(-50%,-50%)&#125;"</span>, <span class="string">""</span>]);</div><div class="line"></div><div class="line">	<span class="comment">// exports</span></div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<p>果然，问题是出在 <code>css-loader</code> 上，再针对 css-loader 进行处理就好了。查看<a href="https://github.com/webpack-contrib/css-loader/tree/v0.25.0#minification" target="_blank" rel="external">该版本 css-loader 的文档</a>：</p>
+<blockquote>
+<p>By default the css-loader minimizes the css if specified by the module system.</p>
+<p><code>In some cases the minification is destructive to the css</code>, so you can provide some options to it. cssnano is used for minification and you find a list of options here. Just provide them as query parameter: i. e. require(“css-loader?-autoprefixer”) to disable removing of deprecated vendor prefixes.</p>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>现在有两种解决方案</p>
+<ul>
+<li>强制不使用 css-loader 的压缩功能<ul>
+<li><code>style-loader!css-loader?-minimize!postcss-loader</code></li>
+<li>再引入 <a href="https://github.com/ben-eb/cssnano" target="_blank" rel="external">cssnano</a> 对 css 进行压缩</li>
+</ul>
+</li>
+<li>更简单方式： 这个问题再最新版的 css-loader 中已经被修复（压缩使用了 cssnano 来完成），之后更新 css-loader 至 <code>^0.28.4</code> 问题就被解决了， 不需要修改 webpack.config.js。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 overstackflow 和 webpack@1.x 的 ISSUE 中出现的 webpack.optimize.UglifyJsPlugin 引起的 css prefixer 消失的问题根源还是 webpack.optimize.UglifyJsPlugin 会默认让所有 loader 进入压缩模式，然后触发了特定版本 css-loader 压缩的 bug。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 cdatou<br></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
