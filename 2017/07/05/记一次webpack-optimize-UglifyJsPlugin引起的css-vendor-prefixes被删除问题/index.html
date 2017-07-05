@@ -230,16 +230,26 @@
 <p>By default the css-loader minimizes the css if specified by the module system.</p>
 <p><code>In some cases the minification is destructive to the css</code>, so you can provide some options to it. cssnano is used for minification and you find a list of options here. Just provide them as query parameter: i. e. require(“css-loader?-autoprefixer”) to disable removing of deprecated vendor prefixes.</p>
 </blockquote>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>现在有两种解决方案</p>
+<p>对应的 ISSUE ： <a href="https://github.com/webpack-contrib/css-loader/issues/281" target="_blank" rel="external">Remove Autoprefixer from cssnano</a></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>又这么几种方式解决：</p>
 <ul>
-<li>强制不使用 css-loader 的压缩功能<ul>
-<li><code>style-loader!css-loader?-minimize!postcss-loader</code></li>
-<li>再引入 <a href="https://github.com/ben-eb/cssnano" target="_blank" rel="external">cssnano</a> 对 css 进行压缩</li>
+<li>1、告诉 css-loader 在进行压缩的时候，强制不删除 autoprefixer<ul>
+<li><code>style-loader!css-loader?-autoprefixer!postcss-loader</code></li>
 </ul>
 </li>
-<li>更简单方式： 这个问题再最新版的 css-loader 中已经被修复（压缩使用了 cssnano 来完成），之后更新 css-loader 至 <code>^0.28.4</code> 问题就被解决了， 不需要修改 webpack.config.js。</li>
+<li>2、强制不使用 css-loader 的压缩功能<ul>
+<li><code>style-loader!css-loader?-minimize!postcss-loader</code></li>
+<li>再手动指明用 <a href="https://github.com/ben-eb/cssnano" target="_blank" rel="external">cssnano</a> 对 css 进行压缩（配置不要压缩 autoprefixer 项）</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 overstackflow 和 webpack@1.x 的 ISSUE 中出现的 webpack.optimize.UglifyJsPlugin 引起的 css prefixer 消失的问题根源还是 webpack.optimize.UglifyJsPlugin 会默认让所有 loader 进入压缩模式，然后触发了特定版本 css-loader 压缩的 bug。</p>
+</li>
+<li>3、升级 css-loader： 这个问题在更高版本的 css-loader 中已经被修复，更新 css-loader 大于等于 <code>V0.26.0</code> 问题就可以解决， 不需要修改 webpack.config.js。<ul>
+<li>可以对比下 css-loader 在使用 cssnano 压缩 css 代码的配置上又什么不同 <a href="https://github.com/webpack-contrib/css-loader/blob/v0.25.0/lib/processCss.js#L182" target="_blank" rel="external">v0.25.0</a> VS <a href="https://github.com/webpack-contrib/css-loader/blob/v0.26.0/lib/processCss.js#L182" target="_blank" rel="external">v0.26.0</a></li>
+<li>对应的修复说明： <a href="https://github.com/webpack-contrib/css-loader/pull/361" target="_blank" rel="external">Disable Autoprefixer in cssnano</a></li>
+</ul>
+</li>
+</ul>
+<p>其实上面几种方法，最终都是告诉 cssnano 在压缩时，不要去删除 autoprefixer 的内容。推荐使用方法3，其次是方法1，最后才是方法2。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 overstackflow 和 webpack@1.x 的 ISSUE 中出现的 webpack.optimize.UglifyJsPlugin 引起的 css prefixer 消失的问题根源还是 webpack.optimize.UglifyJsPlugin 会默认让所有 loader 进入压缩模式，然后触发了v0.26.0 之前版本 css-loader 调用 cssnano 压缩 css 时删除了 prefixer。</p>
 
 
                 
